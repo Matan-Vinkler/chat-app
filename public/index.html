@@ -10,8 +10,12 @@
         <div class="centered-form">
             <div class="centered-form__box">
                 <h1>Join</h1>
-                <form action="/chat.html">
+                <button id="swap"onclick="Swap()">Create Custom Room</button>
+                <br><br>
+
+                <form id="default" action="/chat.html">
                     <input type="text" name="username" placeholder="Username" required>
+
                     <select name="room" id="room" required>
                         <option value="Middle East/Africa">Middle East/Africa</option>
                         <option value="Asia/Oceania">Asia/Oceania</option>
@@ -22,7 +26,32 @@
                     
                     <button>Join</button>
                 </form>
+
+                <form id="custom" action="/chat.html" hidden>
+                    <input type="text" name="username" placeholder="Username" required>
+                    <input type="text" name="room" id="custom-room" placeholder="Custom room name" required>
+
+                    <button>Join</button>
+                </form>
             </div>
         </div>
+        <script type="text/javascript">
+            function Swap() {
+                var $swap = document.getElementById("swap")
+                var $default = document.getElementById("default")
+                var $custom = document.getElementById("custom")
+
+                if($custom.hasAttribute("hidden")) {
+                    $default.setAttribute("hidden", undefined)
+                    $custom.removeAttribute("hidden")
+                    $swap.innerHTML = "Use Default Rooms"
+                }
+                else {
+                    $custom.setAttribute("hidden", undefined)
+                    $default.removeAttribute("hidden")
+                    $swap.innerHTML = "Create Custom Room"
+                }
+            }
+        </script>
     </body>
 </html>

@@ -13,7 +13,9 @@ const addUser = ({id, username, room}) => {
     }
 
     // Check for existing user
-    var existingUser = users.find((user) => user.room  === room && user.username === username)
+    var existingUser = users.find((user) => {
+        return user.room === room && user.username === username
+    })
 
     // Validate username
     if(existingUser) {
