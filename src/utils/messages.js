@@ -1,17 +1,6 @@
 const Room = require("../db/rooms")
 
-const generateMessage = (username, text, roomName) => {
-    var room = Room.findOne({Name: roomName})
-    var date = new Date().getTime()
-
-    room.Messages.push({
-        username,
-        date,
-        text
-    })
-
-    room.save()
-
+const generateMessage = (username, text) => {
     return {
         username,
         text,
