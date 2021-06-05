@@ -138,7 +138,7 @@ socket.emit("join", {username, room}, (error, saved) => {
                         username: msg.username,
                         url: msg.text,
                         msg: "Here is my location!",
-                        createdAt: "00:00"
+                        createdAt: ""
                     })
                 }
                 else {
@@ -146,7 +146,7 @@ socket.emit("join", {username, room}, (error, saved) => {
                         username: msg.username,
                         url: msg.text,
                         msg: msg.text,
-                        createdAt: "00:00"
+                        createdAt: ""
                     })
                 }
 
@@ -156,7 +156,7 @@ socket.emit("join", {username, room}, (error, saved) => {
                 var html = Mustache.render(msgTemp, {
                     username: msg.username,
                     msg: msg.text,
-                    createdAt: "00:00"
+                    createdAt: ""
                 })
             
                 $messages.insertAdjacentHTML("beforeend", html)
