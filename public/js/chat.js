@@ -48,7 +48,13 @@ $msgForm.addEventListener("submit", (e) => {
     socket.emit("sendMessage", msg, (cb_msg) => {
         $msgFormButton.removeAttribute("disabled")
         $msgFormInput.value = ""
-        alert(cb_msg)
+
+        if(cb_msg == "Profanity is not allowed." || msg == "Must provide a message.") {
+            alert(cb_msg)
+        }
+        else {
+            console.log(cb_msg)
+        }
     })
 })
 
@@ -74,13 +80,26 @@ $locationForm.addEventListener("click", (e) => {
 })
 
 socket.on("message", (msg) => {
-    var html = Mustache.render(msgTemp, {
-        username: msg.username,
-        msg: msg.text,
-        createdAt: moment(msg.createdAt).format("HH:mm")
-    })
+    if(msg.text.startsWith("https://") || msg.text.startsWith("http://")) {
+        var html = Mustache.render(locationTemp, {
+            username: msg.username,
+            url: msg.text,
+            msg: msg.text,
+            createdAt: moment(msg.createdAt).format("HH:mm")
+        })
 
-    $messages.insertAdjacentHTML("beforeend", html)
+        $messages.insertAdjacentHTML("beforeend", html)
+    }
+    else {
+        var html = Mustache.render(msgTemp, {
+            username: msg.username,
+            msg: msg.text,
+            createdAt: moment(msg.createdAt).format("HH:mm")
+        })
+            
+        $messages.insertAdjacentHTML("beforeend", html)
+    }
+
     autoscroll()
 })
 
@@ -88,6 +107,7 @@ socket.on("locationMessage", (url) => {
     var html = Mustache.render(locationTemp, {
         username: url.username,
         url: url.text,
+        msg: "Here is my location!",
         createdAt: moment(url.createdAt).format("HH:mm")
     })
 
@@ -104,9 +124,45 @@ socket.on("roomData", ({room, users}) => {
     $sidebar.innerHTML = html
 })
 
-socket.emit("join", {username, room}, (error) => {
+socket.emit("join", {username, room}, (error, saved) => {
     if(error) {
         alert(error)
         location.href = "/"
+    }
+
+    if(saved) {
+        JSON.parse(saved).forEach((msg) => {
+            if(msg.text.startsWith("https://") || msg.text.startsWith("http://")) {
+                if(msg.text.startsWith("https://google.com/maps?q=")) {
+                    var html = Mustache.render(locationTemp, {
+                        username: msg.username,
+                        url: msg.text,
+                        msg: "Here is my location!",
+                        createdAt: "00:00"
+                    })
+                }
+                else {
+                    var html = Mustache.render(locationTemp, {
+                        username: msg.username,
+                        url: msg.text,
+                        msg: msg.text,
+                        createdAt: "00:00"
+                    })
+                }
+
+                $messages.insertAdjacentHTML("beforeend", html)
+            }
+            else {
+                var html = Mustache.render(msgTemp, {
+                    username: msg.username,
+                    msg: msg.text,
+                    createdAt: "00:00"
+                })
+            
+                $messages.insertAdjacentHTML("beforeend", html)
+            }
+        });
+
+        autoscroll()
     }
 })
