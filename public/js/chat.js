@@ -48,7 +48,7 @@ $msgForm.addEventListener("submit", (e) => {
     socket.emit("sendMessage", msg, (cb_msg) => {
         $msgFormButton.removeAttribute("disabled")
         $msgFormInput.value = ""
-        console.log(cb_msg)
+        alert(cb_msg)
     })
 })
 
