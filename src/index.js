@@ -21,6 +21,13 @@ io.on("connection", (socket) => {
         room = room.trim().toLowerCase()
         username = username.trim().toLowerCase()
 
+        var msgs = Msg.find({
+            username: {$ne: "System"},
+            roomName: room
+        }, (err, retn) => {
+            callback(undefined, JSON.stringify(retn))
+        })
+
         var {error, user} = addUser({id: socket.id, username, room})
         var msg_ = generateMessage("System", `${user.username} has joined!`, room)
 
@@ -35,13 +42,6 @@ io.on("connection", (socket) => {
         io.to(user.room).emit("roomData", {
             room: user.room,
             users: getUsersInRoom(user.room)
-        })
-
-        var msgs = Msg.find({
-            username: {$ne: "System"},
-            roomName: room
-        }, (err, retn) => { 
-            callback(undefined, JSON.stringify(retn))
         })
     })
 

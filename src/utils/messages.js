@@ -17,13 +17,21 @@ const msgSchema = mongoose.Schema({
     roomName: {
         type: String,
         required: true,
+    },
+    createdAt: {
+        type: String,
+        required: true
     }
 })
 
 const Msg = mongoose.model("User", msgSchema)
 
 const generateMessage = (username, text, room) => {
-    var msg = new Msg({username, text, roomName: room})
+    var dateTime = Date.now()
+    var time = new Date(dateTime)
+    var timeStr = `${time.getHours()}:${time.getMinutes()}`
+
+    var msg = new Msg({username, text, roomName: room, createdAt: timeStr})
 
     msg.save()
 

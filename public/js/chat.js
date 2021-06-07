@@ -80,27 +80,29 @@ $locationForm.addEventListener("click", (e) => {
 })
 
 socket.on("message", (msg) => {
-    if(msg.text.startsWith("https://") || msg.text.startsWith("http://")) {
-        var html = Mustache.render(locationTemp, {
-            username: msg.username,
-            url: msg.text,
-            msg: msg.text,
-            createdAt: moment(msg.createdAt).format("HH:mm")
-        })
+    setTimeout(() => {
+        if(msg.text.startsWith("https://") || msg.text.startsWith("http://")) {
+            var html = Mustache.render(locationTemp, {
+                username: msg.username,
+                url: msg.text,
+                msg: msg.text,
+                createdAt: moment(msg.createdAt).format("HH:mm")
+            })
 
-        $messages.insertAdjacentHTML("beforeend", html)
-    }
-    else {
-        var html = Mustache.render(msgTemp, {
-            username: msg.username,
-            msg: msg.text,
-            createdAt: moment(msg.createdAt).format("HH:mm")
-        })
+            $messages.insertAdjacentHTML("beforeend", html)
+        }
+        else {
+            var html = Mustache.render(msgTemp, {
+                username: msg.username,
+                msg: msg.text,
+                createdAt: moment(msg.createdAt).format("HH:mm")
+            })
             
-        $messages.insertAdjacentHTML("beforeend", html)
-    }
+            $messages.insertAdjacentHTML("beforeend", html)
+        }
 
-    autoscroll()
+        autoscroll()
+    }, 5)
 })
 
 socket.on("locationMessage", (url) => {
@@ -138,7 +140,7 @@ socket.emit("join", {username, room}, (error, saved) => {
                         username: msg.username,
                         url: msg.text,
                         msg: "Here is my location!",
-                        createdAt: ""
+                        createdAt: msg.createdAt
                     })
                 }
                 else {
@@ -146,7 +148,7 @@ socket.emit("join", {username, room}, (error, saved) => {
                         username: msg.username,
                         url: msg.text,
                         msg: msg.text,
-                        createdAt: ""
+                        createdAt: url.createdAt
                     })
                 }
 
@@ -156,7 +158,7 @@ socket.emit("join", {username, room}, (error, saved) => {
                 var html = Mustache.render(msgTemp, {
                     username: msg.username,
                     msg: msg.text,
-                    createdAt: ""
+                    createdAt: msg.createdAt
                 })
             
                 $messages.insertAdjacentHTML("beforeend", html)
