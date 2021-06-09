@@ -24,7 +24,7 @@ const msgSchema = mongoose.Schema({
     }
 })
 
-const Msg = mongoose.model("User", msgSchema)
+const Msg = mongoose.model("Messages", msgSchema)
 
 const generateMessage = (username, text, room) => {
     var dateTime = Date.now()
